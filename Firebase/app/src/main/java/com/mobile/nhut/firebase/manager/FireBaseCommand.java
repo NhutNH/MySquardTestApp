@@ -1,0 +1,12 @@
+package com.mobile.nhut.firebase.manager;
+
+public enum FireBaseCommand {
+  AUTHENTICATION_BY_CUSTOM_TOKEN,
+  AUTHENTICATION_BY_EMAIL,
+  CREATE_USER,
+  SHOW_USER_DATA,
+  SHOW_FRIEND_LIST,
+  LOAD_MESSAGE,
+  CHECK_EXISTS_ROOM,
+  SEND_MESSAGE
+}

@@ -1,0 +1,14 @@
+<resources>
+
+  <!-- Base application theme. -->
+  <style name="AppTheme" parent="Theme.AppCompat.NoActionBar">
+    <!-- Customize your theme here. -->
+  </style>
+  <style name="Custom_TextChat">
+    <item name="android:textColor">@color/black</item>
+    <item name="android:textSize">@dimen/text_size_15</item>
+    <item name="android:typeface">sans</item>
+    <item name="android:textStyle">bold</item>
+    <item name="android:background">@drawable/textchat_selector</item>
+  </style>
+</resources>
