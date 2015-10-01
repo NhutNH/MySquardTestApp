@@ -4,7 +4,7 @@ import com.firebase.client.FirebaseError;
 
 public interface FireBaseResponse {
 
-  public void processFinish(Object response);
+    public void processFinish(Object response);
 
-  public void processError(FirebaseError firebaseError);
+    public void processError(FirebaseError firebaseError);
 }

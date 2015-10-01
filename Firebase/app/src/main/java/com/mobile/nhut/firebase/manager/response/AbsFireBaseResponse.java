@@ -5,12 +5,12 @@ import com.mobile.nhut.firebase.manager.FireBaseResponse;
 
 public abstract class AbsFireBaseResponse {
 
-  protected FireBaseResponse mFireBaseResponse;
+    protected FireBaseResponse mFireBaseResponse;
 
-  protected FireBaseCommand mCommandType;
+    protected FireBaseCommand mCommandType;
 
-  public AbsFireBaseResponse(FireBaseResponse fireBaseResponse, FireBaseCommand command) {
-    this.mFireBaseResponse = fireBaseResponse;
-    this.mCommandType = command;
-  }
+    public AbsFireBaseResponse(FireBaseResponse fireBaseResponse, FireBaseCommand command) {
+        this.mFireBaseResponse = fireBaseResponse;
+        this.mCommandType = command;
+    }
 }

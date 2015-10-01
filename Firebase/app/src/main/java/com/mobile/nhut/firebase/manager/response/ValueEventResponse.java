@@ -8,29 +8,26 @@ import com.mobile.nhut.firebase.manager.FireBaseResponse;
 
 public class ValueEventResponse<T> extends AbsFireBaseResponse implements ValueEventListener {
 
-  private T mData;
+    private T mData;
 
-  public ValueEventResponse(FireBaseResponse fireBaseResponse, FireBaseCommand command) {
-    super(fireBaseResponse, command);
-  }
-
-  @Override
-  public void onDataChange(DataSnapshot snapshot) {
-    switch (mCommandType) {
-      case SHOW_FRIEND_LIST:
-        mFireBaseResponse.processFinish(snapshot);
-        break;
-      case LOAD_MESSAGE:
-        mFireBaseResponse.processFinish(snapshot);
-        break;
-      case CHECK_EXISTS_ROOM:
-        mFireBaseResponse.processFinish(snapshot);
-        break;
+    public ValueEventResponse(FireBaseResponse fireBaseResponse, FireBaseCommand command) {
+        super(fireBaseResponse, command);
     }
-  }
 
-  @Override
-  public void onCancelled(FirebaseError firebaseError) {
-    mFireBaseResponse.processError(firebaseError);
-  }
+    @Override
+    public void onDataChange(DataSnapshot snapshot) {
+        switch (mCommandType) {
+            case SHOW_FRIEND_LIST:
+                mFireBaseResponse.processFinish(snapshot);
+                break;
+            case LOAD_MESSAGE:
+                mFireBaseResponse.processFinish(snapshot);
+                break;
+        }
+    }
+
+    @Override
+    public void onCancelled(FirebaseError firebaseError) {
+        mFireBaseResponse.processError(firebaseError);
+    }
 }

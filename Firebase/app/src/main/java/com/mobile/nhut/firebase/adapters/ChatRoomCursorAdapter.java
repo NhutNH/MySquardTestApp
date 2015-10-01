@@ -6,22 +6,15 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.mobile.nhut.firebase.ChatRoomActivity;
 import com.mobile.nhut.firebase.R;
-import com.mobile.nhut.firebase.adapters.util.ImageLoader;
 import com.mobile.nhut.firebase.dagger.Injector;
 import com.mobile.nhut.firebase.model.Message;
 
-import javax.inject.Inject;
-
 public class ChatRoomCursorAdapter extends AbsCursorAdapter<ChatRoomCursorAdapter.ViewHolder> {
-    @Inject
-    ImageLoader mImageLoader;
-
     private ItemClickListener mClickListener;
 
     public ChatRoomCursorAdapter(Cursor cursor) {

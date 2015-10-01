@@ -1,16 +1,13 @@
 package com.mobile.nhut.firebase.dagger;
 
+import android.content.ContentResolver;
+import android.content.Context;
+
 import com.mobile.nhut.firebase.ChatRoomActivity;
-import com.mobile.nhut.firebase.MainActivity;
 import com.mobile.nhut.firebase.adapters.ChatRoomCursorAdapter;
-import com.mobile.nhut.firebase.adapters.ListNoteAdapter;
-import com.mobile.nhut.firebase.adapters.util.ImageLoader;
 import com.mobile.nhut.firebase.base.AppSettings;
 import com.mobile.nhut.firebase.manager.FireBaseManager;
 import com.mobile.nhut.firebase.offline.OfflineManager;
-
-import android.content.ContentResolver;
-import android.content.Context;
 
 import javax.inject.Singleton;
 
@@ -18,22 +15,19 @@ import dagger.Module;
 import dagger.Provides;
 
 @Module(
-    complete = false,
-    library = true,
-    injects = {
-        MyApplication.class,
-        AppSettings.class,
-        FireBaseManager.class,
-        MainActivity.class,
-        ChatRoomActivity.class,
-        //Adapter
-        ListNoteAdapter.class,
-        ChatRoomCursorAdapter.class,
-        //Util
-        ImageLoader.class,
-        //Offline
-        OfflineManager.class
-    }
+        complete = false,
+        library = true,
+        injects = {
+                MyApplication.class,
+                AppSettings.class,
+                FireBaseManager.class,
+                ChatRoomActivity.class,
+                AppSettings.class,
+                //Adapter
+                ChatRoomCursorAdapter.class,
+                //Offline
+                OfflineManager.class
+        }
 )
 public class MyModule {
 
@@ -46,7 +40,7 @@ public class MyModule {
     @Provides
     @Singleton
     AppSettings provideAppSettings(Context context) {
-        return new AppSettings(context);
+        return AppSettings.getInstance(context);
     }
 
     @Provides
@@ -59,12 +53,6 @@ public class MyModule {
     @Singleton
     OfflineManager provideOfflineManager() {
         return OfflineManager.getInstance();
-    }
-
-    @Provides
-    @Singleton
-    ImageLoader provideImageLoader(Context context) {
-        return ImageLoader.getInstance(context);
     }
 
     @Singleton

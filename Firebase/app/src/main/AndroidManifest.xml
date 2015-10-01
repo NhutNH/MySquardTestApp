@@ -20,10 +20,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".MainActivity"
-            android:label="ChatRoomActivity" >
-        </activity>
         <provider
             android:authorities="com.mobile.nhut.firebase.offline.OfflineProvider"
             android:name=".offline.OfflineProvider"></provider>
