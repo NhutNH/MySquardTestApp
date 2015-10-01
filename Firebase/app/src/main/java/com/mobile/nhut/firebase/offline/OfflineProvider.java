@@ -27,8 +27,6 @@ public class OfflineProvider extends ContentProvider {
 
   public static final String ID = "_id";
 
-  public static final String GROUP_NAME = "GROUP_NAME";
-
   public static final String ID_MESSAGE = "ID_MESSAGE";
 
   public static final String MESSAGE = "MESSAGE";
@@ -68,7 +66,6 @@ public class OfflineProvider extends ContentProvider {
   static final String CREATE_DB_TABLE =
           " CREATE TABLE " + CHATROOM_TABLE_NAME + " (" +
                   ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                  GROUP_NAME + " TEXT NOT NULL, " +
                   AUTHOR + " TEXT NOT NULL," +
                   ID_MESSAGE + " TEXT," +
                   MESSAGE + " TEXT NOT NULL," +

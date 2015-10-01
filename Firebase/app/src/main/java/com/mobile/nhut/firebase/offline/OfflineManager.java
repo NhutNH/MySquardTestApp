@@ -7,6 +7,7 @@ import android.database.Cursor;
 
 import com.firebase.client.DataSnapshot;
 import com.mobile.nhut.firebase.dagger.Injector;
+import com.mobile.nhut.firebase.manager.FireBaseEnvironment;
 import com.mobile.nhut.firebase.model.Message;
 
 import java.util.HashMap;
@@ -67,18 +68,18 @@ public class OfflineManager {
     });
   }
 
-  public Observable<Void> checkExistsMessage(final DataSnapshot dataSnapshot, final String roomName) {
+  public Observable<Void> checkExistsMessage(final DataSnapshot dataSnapshot) {
     return Observable.create(new Observable.OnSubscribe<Void>() {
       @Override
       public void call(Subscriber<? super Void> subscriber) {
         try {
           if (!subscriber.isUnsubscribed()) {
-
             boolean isHasData = fetchDatabyMessageId(dataSnapshot.getKey());
             if(!isHasData){
-              HashMap data = (HashMap) dataSnapshot.child("message").getValue();
+              HashMap data = (HashMap) dataSnapshot.getValue();
+
               if (data != null) {
-                insertToDatabase(roomName, data.get("author").toString(), dataSnapshot.getKey(), data.get("content").toString(), true);
+                insertToDatabase(data.get(FireBaseEnvironment.CHILD.Users).toString(), dataSnapshot.getKey(), data.get(FireBaseEnvironment.CHILD.Message).toString(), true);
               }
 
             }
@@ -111,8 +112,7 @@ public class OfflineManager {
   }
 
   private Cursor fetchDatabyRoom(String groupname) {
-    String selection = OfflineProvider.GROUP_NAME + "=?";
-    Cursor cursor = mContentResolver.query(OfflineProvider.CONTENT_URI, null, selection, new String[]{groupname}, null);
+    Cursor cursor = mContentResolver.query(OfflineProvider.CONTENT_URI, null, null, null, null);
 
     if(cursor != null && cursor.getCount() > 0){
       this.mIsDataAvailable = true;
@@ -140,9 +140,8 @@ public class OfflineManager {
     return mOfflineCursor;
   }
 
-  private void insertToDatabase(String groupname, String author, String id_message, String message, boolean isOffline) throws Exception {
+  private void insertToDatabase(String author, String id_message, String message, boolean isOffline) throws Exception {
     ContentValues values = new ContentValues();
-    values.put(OfflineProvider.GROUP_NAME, groupname);
     values.put(OfflineProvider.AUTHOR, author);
     values.put(OfflineProvider.ID_MESSAGE, id_message);
     values.put(OfflineProvider.MESSAGE, message);

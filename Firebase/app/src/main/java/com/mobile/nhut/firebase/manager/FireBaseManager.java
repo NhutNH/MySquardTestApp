@@ -1,6 +1,9 @@
 package com.mobile.nhut.firebase.manager;
 
+import com.firebase.client.ChildEventListener;
+import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
+import com.firebase.client.FirebaseError;
 import com.mobile.nhut.firebase.base.AppSettings;
 import com.mobile.nhut.firebase.dagger.Injector;
 import com.mobile.nhut.firebase.manager.response.ValueEventResponse;
@@ -72,11 +75,10 @@ public class FireBaseManager {
         .addValueEventListener(new ValueEventResponse(this.mFireBaseResponse, this.mCommandType));
   }
 
-  public void loadMessage(String roomName, FireBaseResponse fireBaseResponse) {
+  public void loadMessage(FireBaseResponse fireBaseResponse) {
     this.mCommandType = FireBaseCommand.LOAD_MESSAGE;
     this.mFireBaseResponse = fireBaseResponse;
-    mFirebaseHost.child(FireBaseEnvironment.CHILD.ChatRooms).child(roomName)
-        .addValueEventListener(new ValueEventResponse(this.mFireBaseResponse, this.mCommandType));
+    mFirebaseHost.addValueEventListener(new ValueEventResponse(this.mFireBaseResponse, this.mCommandType));
   }
 
   public void removeCheckExistRoomEvent() {
@@ -84,11 +86,11 @@ public class FireBaseManager {
         .removeEventListener(new ValueEventResponse(this.mFireBaseResponse, this.mCommandType));
   }
 
-  public void addMessage(String roomName, Message message, FireBaseResponse fireBaseResponse) {
+  public void addMessage(Message message, FireBaseResponse fireBaseResponse) {
     this.mFireBaseResponse = fireBaseResponse;
     Map<String, String> post = new HashMap<String, String>();
-    post.put("author", message.getAuthor());
-    post.put("content", message.getContent());
-    mFirebaseHost.child(FireBaseEnvironment.CHILD.ChatRooms).child(roomName).push().child(FireBaseEnvironment.CHILD.Message).setValue(post);
+    post.put(FireBaseEnvironment.CHILD.Users, message.getAuthor());
+    post.put(FireBaseEnvironment.CHILD.Message, message.getContent());
+    mFirebaseHost.push().setValue(post);
   }
 }

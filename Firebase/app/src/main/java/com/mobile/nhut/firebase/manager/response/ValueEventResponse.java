@@ -20,10 +20,6 @@ public class ValueEventResponse<T> extends AbsFireBaseResponse implements ValueE
       case SHOW_FRIEND_LIST:
         mFireBaseResponse.processFinish(snapshot);
         break;
-      case SHOW_USER_DATA:
-        User user = snapshot.getValue(User.class);
-        mFireBaseResponse.processFinish(user);
-        break;
       case LOAD_MESSAGE:
         mFireBaseResponse.processFinish(snapshot);
         break;

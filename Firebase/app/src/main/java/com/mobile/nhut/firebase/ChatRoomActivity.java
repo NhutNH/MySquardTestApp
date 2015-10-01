@@ -25,6 +25,7 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 import javax.inject.Inject;
 
@@ -74,7 +75,8 @@ public class ChatRoomActivity extends BaseActivity implements FireBaseResponse, 
     vRecyclerView.setHasFixedSize(true);
     mLayoutManager = new LinearLayoutManager(this);
     vRecyclerView.setLayoutManager(mLayoutManager);
-
+    Random rand = new Random();
+    mYourName = "Nhut" + (rand.nextInt(50) + 1);
     initData();
   }
 
@@ -85,7 +87,7 @@ public class ChatRoomActivity extends BaseActivity implements FireBaseResponse, 
     message.setAuthor(mYourName);
     message.setContent(mEdtMessage.getText().toString());
 
-    this.mFireBaseManager.addMessage(mRoomName, message, this);
+    this.mFireBaseManager.addMessage(message, this);
     mEdtMessage.setText("");
   }
 
@@ -93,40 +95,10 @@ public class ChatRoomActivity extends BaseActivity implements FireBaseResponse, 
   public void processFinish(Object response) {
     switch (this.mFireBaseManager.getFireBaseCommand()) {
       case LOAD_MESSAGE:
-//        if (response != null & response instanceof DataSnapshot) {
-//          boolean isUpdateData = false;
-//          DataSnapshot snapshot = (DataSnapshot) response;
-//          if (snapshot.getKey().contains(mYourName) && snapshot.getKey().contains(mFriendName)) {
-//            this.mMessageList = new ArrayList<>();
-//            for (DataSnapshot postSnapshot : snapshot.getChildren()) {
-//              HashMap data = (HashMap) postSnapshot.child("message").getValue();
-//              if (data != null) {
-//                Message message = new Message(data.get("author").toString(), data.get("content").toString(), mYourName);
-//                this.mMessageList.add(message);
-//                this.mKeyList.add(postSnapshot.getKey());
-//                isUpdateData = true;
-//              } else {
-//                isUpdateData = false;
-//              }
-//            }
-//
-//            if (isUpdateData) {
-//              mAdapter = new ChatAdapter(mMessageList);
-//              vRecyclerView.setAdapter(mAdapter);
-//              vRecyclerView.getLayoutManager().scrollToPosition(mAdapter.getItemCount() - 1);
-//            }
-//          }
-//        } else {
-//          mMessageList = new ArrayList<>();
-//          mAdapter = new ChatAdapter(mMessageList);
-//          vRecyclerView.setAdapter(mAdapter);
-//        }
-
         if (response != null & response instanceof DataSnapshot) {
           DataSnapshot snapshot = (DataSnapshot) response;
-          if (snapshot.getKey().contains(mYourName) && snapshot.getKey().contains(mFriendName)) {
             for (DataSnapshot postSnapshot : snapshot.getChildren()) {
-              manageSubscription(mOfflineManager.checkExistsMessage(postSnapshot, mRoomName)
+              manageSubscription(mOfflineManager.checkExistsMessage(postSnapshot)
                       .subscribeOn(Schedulers.from(ThreadExecutor.getInstance()))
                       .observeOn(AndroidSchedulers.mainThread())
                       .subscribe(new Action1<Void>() {
@@ -139,27 +111,7 @@ public class ChatRoomActivity extends BaseActivity implements FireBaseResponse, 
                         }
                       }));
             }
-          }
         }
-        break;
-      case CHECK_EXISTS_ROOM:
-        boolean isHasRoom = false;
-        if (response != null & response instanceof DataSnapshot) {
-          DataSnapshot snapshot = (DataSnapshot) response;
-          for (DataSnapshot postSnapshot : snapshot.getChildren()) {
-            if (postSnapshot.getKey().contains(mYourName) && postSnapshot.getKey().contains(mFriendName)) {
-              mRoomName = postSnapshot.getKey();
-              callLoader();
-              this.mFireBaseManager.loadMessage(mRoomName, this);
-              isHasRoom = true;
-              break;
-            }
-          }
-        }
-        if (!isHasRoom) {
-          this.mFireBaseManager.loadMessage(mRoomName, this);
-        }
-        this.mFireBaseManager.removeCheckExistRoomEvent();
         break;
     }
   }
@@ -170,19 +122,23 @@ public class ChatRoomActivity extends BaseActivity implements FireBaseResponse, 
 
   private void initData() {
     mRoomName = "";
+    mBtnSend.setEnabled(true);
+    callLoader();
+    this.mFireBaseManager.loadMessage(this);
 
-    Intent intent = getIntent();
-    if (intent != null) {
-      mRoomName = intent.getStringExtra(MainActivity.ROOM_NAME);
-      if (!TextUtils.isEmpty(mRoomName) && (mRoomName.split("-").length > 1)) {
-        mYourName = mRoomName.split("-")[0];
-        mFriendName = mRoomName.split("-")[1];
-        mBtnSend.setEnabled(true);
-        this.mFireBaseManager.checkExistsRoom(this);
-      } else {
-        mBtnSend.setEnabled(false);
-      }
-    }
+//    Intent intent = getIntent();
+//    if (intent != null) {
+//      mRoomName = intent.getStringExtra(MainActivity.ROOM_NAME);
+//      if (!TextUtils.isEmpty(mRoomName) && (mRoomName.split("-").length > 1)) {
+//        mYourName = mRoomName.split("-")[0];
+//        mFriendName = mRoomName.split("-")[1];
+//        mBtnSend.setEnabled(true);
+//        callLoader();
+//        this.mFireBaseManager.loadMessage(mRoomName, this);
+//      } else {
+//        mBtnSend.setEnabled(false);
+//      }
+//    }
   }
 
   private void callLoader() {
@@ -196,8 +152,7 @@ public class ChatRoomActivity extends BaseActivity implements FireBaseResponse, 
 
   @Override
   public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-    String selection = OfflineProvider.GROUP_NAME + "=?";
-    CursorLoader cursorLoader = new CursorLoader(this, OfflineProvider.CONTENT_URI, null, selection, new String[]{mRoomName}, null);
+    CursorLoader cursorLoader = new CursorLoader(this, OfflineProvider.CONTENT_URI, null, null, null, null);
     return cursorLoader;
 
   }
